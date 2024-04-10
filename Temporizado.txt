@@ -1,0 +1,23 @@
+E:\Arduino projects\TSL235R_non_interrupt_SQM\TSL235R_non_interrupt_SQM.ino
+Count: 57	Hz: 32.74	0.07 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.21
+Count: 65	Hz: 36.20	0.08 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.10
+Count: 66	Hz: 36.61	0.08 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.09
+Count: 65	Hz: 41.43	0.09 uW/cm2	Tiempo: 1 Segundos	SQM value: 19.96
+Count: 65	Hz: 35.90	0.08 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.11
+Count: 66	Hz: 33.49	0.07 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.19
+Count: 64	Hz: 23.65	0.05 uW/cm2	Tiempo: 2 Segundos	SQM value: 20.57
+Count: 62	Hz: 34.27	0.08 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.16
+Count: 63	Hz: 29.05	0.07 uW/cm2	Tiempo: 2 Segundos	SQM value: 20.34
+Count: 63	Hz: 12.06	0.03 uW/cm2	Tiempo: 5 Segundos	SQM value: 21.30
+Count: 65	Hz: 12.01	0.03 uW/cm2	Tiempo: 5 Segundos	SQM value: 21.30
+Count: 62	Hz: 19.49	0.04 uW/cm2	Tiempo: 3 Segundos	SQM value: 20.78
+Count: 62	Hz: 39.33	0.09 uW/cm2	Tiempo: 1 Segundos	SQM value: 20.01
+Count: 66	Hz: 40.36	0.09 uW/cm2	Tiempo: 1 Segundos	SQM value: 19.99
+Count: 63	Hz: 4.23	0.01 uW/cm2	Tiempo: 14 Segundos	SQM value: 22.43
+Count: 62	Hz: 7.27	0.02 uW/cm2	Tiempo: 8 Segundos	SQM value: 21.85
+Count: 61	Hz: 2.98	0.00 uW/cm2	Tiempo: 20 Segundos	SQM value: 22.82
+Count: 63	Hz: 3.18	0.01 uW/cm2	Tiempo: 19 Segundos	SQM value: 22.74
+Count: 62	Hz: 3.22	0.01 uW/cm2	Tiempo: 19 Segundos	SQM value: 22.73
+Count: 62	Hz: 3.35	0.01 uW/cm2	Tiempo: 18 Segundos	SQM value: 22.69
+Count: 62	Hz: 3.45	0.01 uW/cm2	Tiempo: 17 Segundos	SQM value: 22.65
+Count: 62	Hz: 2.50	0.00 uW/cm2	Tiempo: 24 Segundos	SQM value: 23.01

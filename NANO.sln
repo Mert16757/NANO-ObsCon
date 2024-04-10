@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34511.84
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NANO", "NANO\NANO.csproj", "{C708E487-E3A9-4073-A545-294B88674225}"
+EndProject
+Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "NANO ObsCon", "NANO\NANO ObsCon\NANO ObsCon.aiproj", "{C6C20976-4876-4984-A11E-C4514093566C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		All|Any CPU = All|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		DefaultBuild|Any CPU = DefaultBuild|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C708E487-E3A9-4073-A545-294B88674225}.All|Any CPU.ActiveCfg = Release|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.All|Any CPU.Build.0 = Release|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.DefaultBuild|Any CPU.ActiveCfg = Debug|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.DefaultBuild|Any CPU.Build.0 = Debug|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C708E487-E3A9-4073-A545-294B88674225}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6C20976-4876-4984-A11E-C4514093566C}.All|Any CPU.ActiveCfg = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.All|Any CPU.Build.0 = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.Debug|Any CPU.ActiveCfg = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.Debug|Any CPU.Build.0 = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.DefaultBuild|Any CPU.ActiveCfg = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.DefaultBuild|Any CPU.Build.0 = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.Release|Any CPU.ActiveCfg = DefaultBuild
+		{C6C20976-4876-4984-A11E-C4514093566C}.Release|Any CPU.Build.0 = DefaultBuild
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FA95244A-2E6A-4EC3-8768-C69830752B33}
+	EndGlobalSection
+EndGlobal
