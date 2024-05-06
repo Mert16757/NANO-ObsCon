@@ -128,6 +128,7 @@ namespace ASCOM.NANO.ObservingConditions
             UpdatetextBox1.Text = ObservingConditionsHardware.UpdateSampleTimeDefault;
             CorrtextBox1.Text = ObservingConditionsHardware.CorrFactorScopeDefault;
             tl.LogMessage("InitUI", $"Set UI controls to Trace: {chkTrace.Checked}, COM Port: {comboBoxComPort.SelectedItem}");
+            FWHMcheckBox1.Checked = Convert.ToBoolean(ObservingConditionsHardware.FWHMsaveFrames);
         }
 
         private void SetupDialogForm_Load(object sender, EventArgs e)
@@ -193,6 +194,18 @@ namespace ASCOM.NANO.ObservingConditions
         private void CorrtextBox1_TextChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void FWHMcheckBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (FWHMcheckBox1.Checked == true)
+            {
+                ObservingConditionsHardware.FWHMsaveFrames = "True";
+            }
+            else
+            {
+                ObservingConditionsHardware.FWHMsaveFrames = "False";
+            }
         }
     }
 }

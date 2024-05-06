@@ -49,6 +49,7 @@ namespace ASCOM.NANO.ObservingConditions
             this.label7 = new System.Windows.Forms.Label();
             this.CorrtextBox1 = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.FWHMcheckBox1 = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.picASCOM)).BeginInit();
             this.SuspendLayout();
             // 
@@ -57,7 +58,7 @@ namespace ASCOM.NANO.ObservingConditions
             this.cmdOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.cmdOK.Location = new System.Drawing.Point(472, 322);
-            this.cmdOK.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmdOK.Margin = new System.Windows.Forms.Padding(4);
             this.cmdOK.Name = "cmdOK";
             this.cmdOK.Size = new System.Drawing.Size(79, 30);
             this.cmdOK.TabIndex = 0;
@@ -70,7 +71,7 @@ namespace ASCOM.NANO.ObservingConditions
             this.cmdCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.cmdCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.cmdCancel.Location = new System.Drawing.Point(472, 359);
-            this.cmdCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cmdCancel.Margin = new System.Windows.Forms.Padding(4);
             this.cmdCancel.Name = "cmdCancel";
             this.cmdCancel.Size = new System.Drawing.Size(79, 31);
             this.cmdCancel.TabIndex = 1;
@@ -95,7 +96,7 @@ namespace ASCOM.NANO.ObservingConditions
             this.picASCOM.Cursor = System.Windows.Forms.Cursors.Hand;
             this.picASCOM.Image = ((System.Drawing.Image)(resources.GetObject("picASCOM.Image")));
             this.picASCOM.Location = new System.Drawing.Point(487, 11);
-            this.picASCOM.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.picASCOM.Margin = new System.Windows.Forms.Padding(4);
             this.picASCOM.Name = "picASCOM";
             this.picASCOM.Size = new System.Drawing.Size(48, 56);
             this.picASCOM.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -119,7 +120,7 @@ namespace ASCOM.NANO.ObservingConditions
             // 
             this.chkTrace.AutoSize = true;
             this.chkTrace.Location = new System.Drawing.Point(24, 113);
-            this.chkTrace.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chkTrace.Margin = new System.Windows.Forms.Padding(4);
             this.chkTrace.Name = "chkTrace";
             this.chkTrace.Size = new System.Drawing.Size(80, 20);
             this.chkTrace.TabIndex = 6;
@@ -131,7 +132,7 @@ namespace ASCOM.NANO.ObservingConditions
             // 
             this.comboBoxComPort.FormattingEnabled = true;
             this.comboBoxComPort.Location = new System.Drawing.Point(24, 78);
-            this.comboBoxComPort.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.comboBoxComPort.Margin = new System.Windows.Forms.Padding(4);
             this.comboBoxComPort.Name = "comboBoxComPort";
             this.comboBoxComPort.Size = new System.Drawing.Size(176, 24);
             this.comboBoxComPort.TabIndex = 7;
@@ -140,7 +141,7 @@ namespace ASCOM.NANO.ObservingConditions
             // FWHMtextBox1
             // 
             this.FWHMtextBox1.Location = new System.Drawing.Point(24, 144);
-            this.FWHMtextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.FWHMtextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.FWHMtextBox1.Name = "FWHMtextBox1";
             this.FWHMtextBox1.Size = new System.Drawing.Size(279, 22);
             this.FWHMtextBox1.TabIndex = 8;
@@ -162,7 +163,7 @@ namespace ASCOM.NANO.ObservingConditions
             // BatchtextBox1
             // 
             this.BatchtextBox1.Location = new System.Drawing.Point(24, 183);
-            this.BatchtextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.BatchtextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.BatchtextBox1.Name = "BatchtextBox1";
             this.BatchtextBox1.Size = new System.Drawing.Size(279, 22);
             this.BatchtextBox1.TabIndex = 10;
@@ -181,7 +182,7 @@ namespace ASCOM.NANO.ObservingConditions
             // Batchfile
             // 
             this.Batchfile.Location = new System.Drawing.Point(24, 219);
-            this.Batchfile.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Batchfile.Margin = new System.Windows.Forms.Padding(4);
             this.Batchfile.Name = "Batchfile";
             this.Batchfile.Size = new System.Drawing.Size(176, 22);
             this.Batchfile.TabIndex = 12;
@@ -200,7 +201,7 @@ namespace ASCOM.NANO.ObservingConditions
             // LogfiletextBox1
             // 
             this.LogfiletextBox1.Location = new System.Drawing.Point(24, 257);
-            this.LogfiletextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogfiletextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.LogfiletextBox1.Name = "LogfiletextBox1";
             this.LogfiletextBox1.Size = new System.Drawing.Size(176, 22);
             this.LogfiletextBox1.TabIndex = 14;
@@ -220,7 +221,7 @@ namespace ASCOM.NANO.ObservingConditions
             // 
             this.LogfilecheckBox1.AutoSize = true;
             this.LogfilecheckBox1.Location = new System.Drawing.Point(124, 113);
-            this.LogfilecheckBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.LogfilecheckBox1.Margin = new System.Windows.Forms.Padding(4);
             this.LogfilecheckBox1.Name = "LogfilecheckBox1";
             this.LogfilecheckBox1.Size = new System.Drawing.Size(112, 20);
             this.LogfilecheckBox1.TabIndex = 16;
@@ -231,7 +232,7 @@ namespace ASCOM.NANO.ObservingConditions
             // UpdatetextBox1
             // 
             this.UpdatetextBox1.Location = new System.Drawing.Point(153, 293);
-            this.UpdatetextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.UpdatetextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.UpdatetextBox1.Name = "UpdatetextBox1";
             this.UpdatetextBox1.Size = new System.Drawing.Size(48, 22);
             this.UpdatetextBox1.TabIndex = 17;
@@ -251,7 +252,7 @@ namespace ASCOM.NANO.ObservingConditions
             // CorrtextBox1
             // 
             this.CorrtextBox1.Location = new System.Drawing.Point(152, 330);
-            this.CorrtextBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.CorrtextBox1.Margin = new System.Windows.Forms.Padding(4);
             this.CorrtextBox1.Name = "CorrtextBox1";
             this.CorrtextBox1.Size = new System.Drawing.Size(48, 22);
             this.CorrtextBox1.TabIndex = 19;
@@ -267,11 +268,23 @@ namespace ASCOM.NANO.ObservingConditions
             this.label8.TabIndex = 20;
             this.label8.Text = "Correction factor FWHM-scope\r\n";
             // 
+            // FWHMcheckBox1
+            // 
+            this.FWHMcheckBox1.AutoSize = true;
+            this.FWHMcheckBox1.Location = new System.Drawing.Point(243, 113);
+            this.FWHMcheckBox1.Name = "FWHMcheckBox1";
+            this.FWHMcheckBox1.Size = new System.Drawing.Size(234, 20);
+            this.FWHMcheckBox1.TabIndex = 21;
+            this.FWHMcheckBox1.Text = "Save FWHM frames in Path\\Saved";
+            this.FWHMcheckBox1.UseVisualStyleBackColor = true;
+            this.FWHMcheckBox1.CheckedChanged += new System.EventHandler(this.FWHMcheckBox1_CheckedChanged);
+            // 
             // SetupDialogForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(564, 400);
+            this.Controls.Add(this.FWHMcheckBox1);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.CorrtextBox1);
             this.Controls.Add(this.label7);
@@ -294,7 +307,7 @@ namespace ASCOM.NANO.ObservingConditions
             this.Controls.Add(this.cmdOK);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SetupDialogForm";
@@ -330,5 +343,6 @@ namespace ASCOM.NANO.ObservingConditions
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox CorrtextBox1;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.CheckBox FWHMcheckBox1;
     }
 }

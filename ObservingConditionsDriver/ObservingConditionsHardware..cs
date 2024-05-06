@@ -64,6 +64,8 @@ namespace ASCOM.NANO.ObservingConditions
         internal static string SensorLogfileDefault = "Sensorlog.txt";
         internal const string LogFileStateProfileName = "SensorLogState";
         internal const string LogFileStateDefault = "False";
+        internal const string FWHMlogProfileName = "FWHMsaveEnable";
+        public static string FWHMsaveFrames = "False";
         public static string SensorLogEnable = "False";
         public static string logfileString = "";
         public const string UpdateSampleTimeProfileName = "SampleTime";
@@ -71,6 +73,9 @@ namespace ASCOM.NANO.ObservingConditions
         public const string CorrFactorScopeProfileName = "FWHM-scope-factor";
         public static string CorrFactorScopeDefault = "42";   // More or less for Polemaster with 25mm Focallength
         public static int HeadertextWritten = 0;    // First time log the header text has to be written
+        public static int FirstTimeConnect = 1;     // First connect to NANO ObsCon, after that to 0
+        public static int SaveFileIndexNumber = 1;
+        public static string FWHMsaveEnable = "False";
 
         private static string DriverProgId = ""; // ASCOM DeviceID (COM ProgID) for this driver, the value is set by the driver's class initialiser.
         private static string DriverDescription = ""; // The value is set by the driver's class initialiser.
@@ -475,8 +480,15 @@ namespace ASCOM.NANO.ObservingConditions
                     if ( SensorLogEnable == "True") {       // Write value to logfile-string
                              logfileString = logfileString + ";" + dewPoint;
                     }
-                    Thread.Sleep(15000);
-                    return Double.Parse(dewPoint);
+                    if (ObservingConditionsHardware.FirstTimeConnect == 1)
+                    {
+                        ObservingConditionsHardware.FirstTimeConnect = 0;
+                        return Double.Parse(dewPoint);
+                    }
+                    else
+                    {
+                        return Double.Parse(dewPoint);
+                    }
                 }
                 else
                 {
@@ -726,13 +738,32 @@ namespace ASCOM.NANO.ObservingConditions
         {
             get
             {
-                string OldFile, NewFile, WorkDir;
+                string OldFile, NewFile, WorkDir, SaveDir, SaveFile;
                 String line, fwhmfile;
                 long fwhmFileSize;
-                int readfwhmindex;
+                int readfwhmindex, lineLength;
                 WorkDir = FWHMpathDefault;
+                SaveDir = FWHMpathDefault + "\\Saved";
                 OldFile = "FWHM.old";
                 NewFile = "FWHM.fits";
+                
+                SaveFile = "FWHM" + SaveFileIndexNumber + ".fits";
+
+                if (FWHMsaveFrames == "True")   // Save all of the FWHM frames to a subdirectory
+                {
+                    // Copy FWHM.fits to FWHMDefault\Saved FWHMsequencial#.fits file numbering
+                    if (Directory.Exists(WorkDir + "\\Saved"))
+                    {
+                        File.Copy(WorkDir + "\\" + NewFile, SaveDir + "\\" + SaveFile);
+                        SaveFileIndexNumber++;
+                    } else
+                    {
+                        Directory.CreateDirectory(WorkDir + "\\Saved");
+                        File.Copy(WorkDir + "\\" + NewFile, SaveDir + "\\" + SaveFile);
+                        SaveFileIndexNumber++;
+                    }
+                }
+
                 System.Diagnostics.Process p = new System.Diagnostics.Process();
                 string batch_file_path = BatchfilepathDefault + "\\" + ObservingConditionsHardware.BatchfileDefault;  // For the batchfile to work you need to have Siril installed
                 p.StartInfo.FileName = "cmd.exe"; // <-- EXECUTABLE NAME
@@ -744,7 +775,7 @@ namespace ASCOM.NANO.ObservingConditions
                 p.StartInfo.UseShellExecute = false; // <-- USE THE C# APPLICATION AS THE SHELL THROUGH WHICH THE PROCESS IS EXECUTED, NOT THE OS ITSELF
 
                 p.Start(); // <-- START THE APPLICATION
-                p.WaitForExit();  // let batchfile terminate
+                p.WaitForExit();  // let batchfile terminate and create the text file. If empty then only add 0 to the logfile string
 
                 if (File.Exists(WorkDir + "\\" + OldFile))
                 {
@@ -755,12 +786,18 @@ namespace ASCOM.NANO.ObservingConditions
                 ///  FWHM " = ( FWHM pix * pixelsize (um) * 206.3 ) / Focallength ( mm )
                 ///  pixelsize = 3.75 um  and Focallength = 25.29 mm  ( Polemaster )
 
-                fwhmfile = WorkDir + "\\" + "fwhm.txt";  // No funciona!
+                fwhmfile = WorkDir + "\\" + "fwhm.txt";
                 fwhmFileSize = new FileInfo(fwhmfile).Length;
+//                if(fwhmFileSize == 0)
+//                {
+//                    logfileString = logfileString + ";" + "na.";
+//                    return -1.0;
+//                }
 
-                if ( File.Exists(fwhmfile) )    // FileInfo(FilePath).Length
+                if ( File.Exists(fwhmfile) )   // FileInfo(FilePath).Length
                 {
-                     double fwhmPixel, fwhmArcsec, Corrfactor;
+                 //   File.Delete(fwhmfile);
+                    double fwhmPixel, fwhmArcsec, Corrfactor;
                     // Example Output: 
                     // log: Found 1754 Gaussian profile stars in image, channel #1 (FWHM 6.158044)
                     Corrfactor = Convert.ToDouble(ObservingConditionsHardware.CorrFactorScopeDefault);
@@ -768,9 +805,25 @@ namespace ASCOM.NANO.ObservingConditions
                     StreamReader sr = new StreamReader(F);
                     line = sr.ReadLine();
                     line.Trim();
-                    if( fwhmFileSize == 0 )
+                    lineLength = line.Length;
+                    if ( lineLength < 5 )
                     {
-                        logfileString = logfileString + ";" + "-1.0";
+                        logfileString = logfileString + ";" + "na.";
+                        sr.Close();
+                        return -1.0;
+                    }
+
+
+                    if ( String.IsNullOrEmpty(line) )
+                    {
+                        logfileString = logfileString + ";" + "na.";
+                        sr.Close();
+                        return -1.0;
+                    }
+
+                    if ( fwhmFileSize < 1 )
+                    {
+                        logfileString = logfileString + ";" + "na.";
                         sr.Close();
                         return -1.0;
                     }
@@ -778,25 +831,25 @@ namespace ASCOM.NANO.ObservingConditions
                     if ( SensorLogEnable == "True" )
                     {
                         readfwhmindex = line.IndexOf("FWHM");
-                        if ( readfwhmindex < 10 )  // File empty?
+                        fwhmPixel = double.Parse(line.Substring(readfwhmindex + 5, 5));
+                        fwhmArcsec = ((fwhmPixel * 3.8 * 206.3) / 25.29) / Corrfactor;  // in case of PoleMaster
+                        if ( fwhmPixel == 0.00 )
                         {
-                            logfileString = logfileString + ";" + "-1.0";
+                            logfileString = logfileString + ";" + "na.";
                             sr.Close();
                             return -1.0;
                         }
-                        else
-                        {
-                            fwhmPixel = double.Parse(line.Substring(readfwhmindex + 5, 5));
-                            fwhmArcsec = ((fwhmPixel * 3.8 * 206.3) / 25.29) / Corrfactor;
-                            logfileString = logfileString + ";" + Convert.ToString(fwhmArcsec);
-                            sr.Close();
-                            return fwhmArcsec;
-                        }
+                        logfileString = logfileString + ";" + Convert.ToString(fwhmArcsec);
+                        sr.Close();
+                        return fwhmArcsec;
                     }
-                     readfwhmindex = line.IndexOf("FWHM");
-                     fwhmPixel = double.Parse(line.Substring(readfwhmindex + 5, 5));
-                     fwhmArcsec = ((fwhmPixel * 3.8 * 206.3) / 25.29) / Corrfactor;
-                     return fwhmArcsec;
+                    else
+                    {
+                        readfwhmindex = line.IndexOf("FWHM");
+                        fwhmPixel = double.Parse(line.Substring(readfwhmindex + 5, 5));
+                        fwhmArcsec = ((fwhmPixel * 3.8 * 206.3) / 25.29) / Corrfactor;
+                        return fwhmArcsec;
+                    }
                 }
                 else
                 {
@@ -833,6 +886,7 @@ namespace ASCOM.NANO.ObservingConditions
             {
                 if (!Connected)
                 {
+                    Thread.Sleep(500);
                     string ReadTemperature, temperature = string.Empty;
                     LocalServer.SharedResources.Connected = true;
                     ReadTemperature = LocalServer.SharedResources.SendMessage("6HtuTemp#");
@@ -1080,6 +1134,7 @@ namespace ASCOM.NANO.ObservingConditions
                 SensorLogEnable = driverProfile.GetValue(DriverProgId, LogFileStateProfileName, string.Empty, LogFileStateDefault);
                 UpdateSampleTimeDefault = driverProfile.GetValue(DriverProgId, UpdateSampleTimeProfileName, string.Empty, UpdateSampleTimeDefault);
                 CorrFactorScopeDefault = driverProfile.GetValue(DriverProgId, CorrFactorScopeProfileName, string.Empty, CorrFactorScopeDefault);
+                FWHMsaveFrames = driverProfile.GetValue(DriverProgId,FWHMlogProfileName,string.Empty, FWHMsaveFrames);
             }
         }
 
@@ -1099,7 +1154,8 @@ namespace ASCOM.NANO.ObservingConditions
                 driverProfile.WriteValue(DriverProgId, SensorLogfileProfileName, SensorLogfileDefault.ToString());
                 driverProfile.WriteValue(DriverProgId, LogFileStateProfileName, SensorLogEnable.ToString());
                 driverProfile.WriteValue(DriverProgId, UpdateSampleTimeProfileName, UpdateSampleTimeDefault.ToString());
-                driverProfile.WriteValue(DriverProgId, CorrFactorScopeProfileName, CorrFactorScopeDefault.ToString());  
+                driverProfile.WriteValue(DriverProgId, CorrFactorScopeProfileName, CorrFactorScopeDefault.ToString());
+                driverProfile.WriteValue(DriverProgId, FWHMlogProfileName, FWHMsaveFrames.ToString());
             }
         }
 
