@@ -86,6 +86,10 @@ namespace ASCOM.NANO.ObservingConditions
         internal static AstroUtils astroUtilities; // ASCOM AstroUtilities object for use as required
         internal static TraceLogger tl; // Local server's trace logger object for diagnostic log with information that you specify
 
+        // Constant used for conversion of SQM to Lux value
+
+        public static double Last_SQM_value = 18.50;
+
         /// <summary>
         /// Initializes a new instance of the device Hardware class.
         /// </summary>
@@ -688,13 +692,23 @@ namespace ASCOM.NANO.ObservingConditions
         {
             get
             {
+                double Brightness;
                 //   LogMessage("SkyBrightness", "get - not implemented");
                 //   throw new PropertyNotImplementedException("SkyBrightness", false);
-                if (SensorLogEnable == "True")
-                {       // Write value to logfile-string
-                    logfileString = logfileString + ";" + "0";
+                // SkyBrightness=0.3899*last_SQM_value^2-16.792*last_SQM_value+181.04
+                if ( ObservingConditionsHardware.Last_SQM_value > 19)
+                {
+                    Brightness = (0.3899 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.792 * (ObservingConditionsHardware.Last_SQM_value) + 181.04);
                 }
-                return 0;
+                else
+                {
+                    Brightness = (0.3899 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.792 * (ObservingConditionsHardware.Last_SQM_value) + 181.04);
+                }
+                    if (SensorLogEnable == "True")
+                {       // Write value to logfile-string
+                    logfileString = logfileString + ";" + Brightness;
+                }
+                return Brightness;
             }
          }
 
@@ -722,6 +736,7 @@ namespace ASCOM.NANO.ObservingConditions
                 {       // Write value to logfile-string
                     logfileString = logfileString + ";" + skyquality;
                 }
+                Last_SQM_value = Double.Parse(skyquality);  
                 return Double.Parse(skyquality);
             }
             else
