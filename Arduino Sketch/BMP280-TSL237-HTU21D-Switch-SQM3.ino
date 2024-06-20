@@ -14,7 +14,7 @@
 TSL235R  mySensor;
 #define SQM_SAMPLES 5
 #define SQM_AVG_DELAY 5
-#define SQM_LIMIT 14.35   // Calibration factor ( 14.55 with time limit ) to establish against ASTAP values or with SQM-L
+#define SQM_LIMIT 13.51   // Calibration factor ( 14.15 with time limit ) to establish against ASTAP values or with SQM-L
 #define Pedestal 0
 
 
@@ -25,8 +25,10 @@ Adafruit_HTU21DF htu = Adafruit_HTU21DF(); // I2C interface
 
 int Query, First_Connect;
 float hum, temp, dewpt;
-double Promedia, Last_Value, Current_Value;
-double altura, val, last_SQM_val; 
+volatile double last_SQM_val; 
+volatile double last_Temp, last_Dew, last_Hum, last_Press;
+
+
 
 void setup() { 
   Serial.begin(9600);
@@ -52,12 +54,22 @@ void setup() {
   mySensor.setWavelength(450);      // Rob Tillaart
 
   last_SQM_val = 18.50;
+  last_Temp = 15.0;
+  last_Hum=45.56;
+  last_Dew=10.51;
+  last_Press=985.15;
   First_Connect = 1;   // Start from 0 when connecting NINA/... to NANO ObsCon
-  
+//  Take_Measurements();
 }
 
 void loop() {
   String CMD = "";
+
+//  last_Hum = htu.readHumidity();
+//  last_Temp = htu.readTemperature();
+//  last_Dew = (last_Temp-(100-last_Hum)/5);
+//  last_Press = (bmp.readPressure()/100);
+//  First_connection();  // SQM value
 
   if (Serial.available() >0 ){
     CMD = Serial.readStringUntil('#');
@@ -70,67 +82,76 @@ void loop() {
         Serial.flush();
         break;
       case 1:
-        hum = htu.readHumidity(); //Leemos la Humedad
-        delay(100);
-        temp = htu.readTemperature(); //Leemos la temperatura en grados Celsius
-        delay(100);
-        dewpt = (temp-(100-hum)/5);
-        Serial.print(dewpt);
+        last_Dew = (last_Temp-(100-last_Hum)/5);
+        Serial.print(last_Dew);
         Serial.print("#");
+        last_Temp = htu.readTemperature();
+        delay(500);
+        last_Hum = htu.readHumidity();
         Serial.flush();
         break;
       case 2:
-        Serial.print(bmp.readPressure()/100);  //displaying the Pressure in hPa, you can change the unit
+        last_Press = (bmp.readPressure()/100);
+        Serial.print(last_Press);
         Serial.print("#");
         Serial.flush();      
         break;
-      case 3:
-        Serial.print(bmp.readAltitude(1013.25));  //The "1013.2" is the pressure(hPa) at sea level in day in your region 030724 994.85 to reach 459 m
-        Serial.print(" metros#  "); 
-        Serial.flush();   
-        break;
-      case 4:
-        Serial.print(bmp.readTemperature());
-        Serial.print("#");
-        Serial.flush();     
-        break;
       case 5:
-        val = last_SQM_val;
-        if ( First_Connect == 1 ){
-          First_Connect = 0;
-        }
-        Serial.print(val);
+        Serial.print(last_SQM_val);
         Serial.print("#");
         Serial.flush();     
         break;
-      case 6:
-        Serial.print(htu.readTemperature());
+      case 6:  
+        Serial.print (last_Temp);
         Serial.print("#");      
         Serial.flush();
+ //       Take_Measurements();
+        First_connection();
         break;
       case 7:
-        Serial.print(htu.readHumidity());
+        Serial.print(last_Hum);
         Serial.print("#");
         Serial.flush();
+        last_Hum = htu.readHumidity();
         break;
       default:
       break;
     }
-    if ( First_Connect == 0 ) {
-          last_SQM_val = sqm_dark();    // We read the value of SQM because it can take up to 35 seconds when very dark
-        }
-        if ( last_SQM_val > 16 ) {
-          last_SQM_val = sqm_dark();
-        } else {
-          last_SQM_val= sqm();
-        }
    }
-}   
+}
 
-double sqm() {
+
+double First_connection() {
+      if ( First_Connect == 0 ) {
+          if ( last_SQM_val > 17 ) {
+            last_SQM_val = sqm_dark();
+          }
+          if ( ( last_SQM_val <= 17 ) && ( last_SQM_val > 10 ) ) {
+              last_SQM_val = sqm();
+          }
+          if ( last_SQM_val <= 10 ) {
+              last_SQM_val = sqm_daytime();
+          }
+      } else {
+  //      Serial.println("First connection, now set to 0" );
+          First_Connect = 0;            // First connect was 1
+          if ( last_SQM_val > 17 ) {
+            last_SQM_val = sqm_dark();
+          }
+          if ( ( last_SQM_val <= 17 ) && ( last_SQM_val > 10 ) ) {
+              last_SQM_val = sqm();
+          }
+          if ( last_SQM_val <= 10 ) {
+              last_SQM_val = sqm_daytime();
+          }
+       }
+}
+
+double sqm_daytime() {
+//  Serial.println("SQM daytime");
    uint16_t cnt = 0;
    uint32_t start = micros();
-    while (cnt < 10 )  
+    while (cnt < 1000 )  
     {
       while (digitalRead(8) == HIGH);  // wait for LOW
       cnt++;
@@ -138,14 +159,29 @@ double sqm() {
     }
   uint32_t duration = micros() - start;
   float freq = (1e6 * cnt) / duration;
-//  last_SQM_value = ( SQM_LIMIT - ( 2.5 * log10(freq/100)));
+  return ( SQM_LIMIT - ( 2.5 * log10(freq/100)));
+}
+
+double sqm() {
+//  Serial.println("SQM afternoon");
+   uint16_t cnt = 0;
+   uint32_t start = micros();
+    while (cnt < 50 )  
+    {
+      while (digitalRead(8) == HIGH);  // wait for LOW
+      cnt++;
+      while (digitalRead(8) == LOW);   // wait for HIGH
+    }
+  uint32_t duration = micros() - start;
+  float freq = (1e6 * cnt) / duration;
   return ( SQM_LIMIT - ( 2.5 * log10(freq/100)));
 }
 
 double sqm_dark() {
+//    Serial.println("SQM dark");
    uint16_t cnt = 0;
    uint32_t start = micros();
-    while ( cnt < 1 )   
+    while ( cnt < 3 )   
     {
       while (digitalRead(8) == HIGH);  // wait for LOW
       cnt++;
@@ -153,6 +189,13 @@ double sqm_dark() {
     }
   uint32_t duration = micros() - start;
   float freq = (1e6 * cnt) / duration;
-//  last_SQM_value = ( SQM_LIMIT - ( 2.5 * log10(freq/100)));
   return ( SQM_LIMIT - ( 2.5 * log10(freq/100)));
 }
+
+void Take_Measurements() {
+//  last_Hum = htu.readHumidity();
+//  last_Temp = htu.readTemperature();
+//  last_Dew = (last_Temp-(100-last_Hum)/5);
+//  last_Press = (bmp.readPressure()/100);
+  First_connection();  // SQM value
+  }
