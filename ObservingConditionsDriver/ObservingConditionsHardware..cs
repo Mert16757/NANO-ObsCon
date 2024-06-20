@@ -693,16 +693,26 @@ namespace ASCOM.NANO.ObservingConditions
             get
             {
                 double Brightness;
+                double TempBrightness3, TempBrightness2, TempBrightness;
                 //   LogMessage("SkyBrightness", "get - not implemented");
                 //   throw new PropertyNotImplementedException("SkyBrightness", false);
-                // SkyBrightness=0.3899*last_SQM_value^2-16.792*last_SQM_value+181.04
+                // V1 SkyBrightness=0.3899*last_SQM_value^2-16.792*last_SQM_value+181.04
+                // V2 SkyBrightness=0.3893*last_SQM_value^2 - 16.751*last_SQM_value + 180.45
+                // V3 SkyBrightness = -0.0534*last_SQM_value^3 + 3.6476*last_SQM_value^2 - 82.95*last_SQM_value + 628.14
+                TempBrightness3 = Math.Pow (ObservingConditionsHardware.Last_SQM_value, 3);
+                TempBrightness2 = Math.Pow(ObservingConditionsHardware.Last_SQM_value, 2);
+                TempBrightness = ObservingConditionsHardware.Last_SQM_value;
+
                 if ( ObservingConditionsHardware.Last_SQM_value > 19)
                 {
-                    Brightness = (0.3899 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.792 * (ObservingConditionsHardware.Last_SQM_value) + 181.04);
+                 //   Brightness = -0.0534 * ( ObservingConditionsHardware.Last_SQM_value*ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value* ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
+                    Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
                 }
                 else
                 {
-                    Brightness = (0.3899 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.792 * (ObservingConditionsHardware.Last_SQM_value) + 181.04);
+                    // Brightness = (0.3893 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.751 * (ObservingConditionsHardware.Last_SQM_value) + 180.45);
+                  //  Brightness = -0.0534 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
+                    Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
                 }
                     if (SensorLogEnable == "True")
                 {       // Write value to logfile-string
