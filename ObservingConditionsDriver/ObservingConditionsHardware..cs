@@ -702,18 +702,19 @@ namespace ASCOM.NANO.ObservingConditions
                 TempBrightness3 = Math.Pow (ObservingConditionsHardware.Last_SQM_value, 3);
                 TempBrightness2 = Math.Pow(ObservingConditionsHardware.Last_SQM_value, 2);
                 TempBrightness = ObservingConditionsHardware.Last_SQM_value;
+                Brightness = Math.Exp((10046 - 500 * Last_SQM_value)/549);
 
-                if ( ObservingConditionsHardware.Last_SQM_value > 19)
-                {
+            //    if ( ObservingConditionsHardware.L0ast_SQM_value > 19)
+            //    {
                  //   Brightness = -0.0534 * ( ObservingConditionsHardware.Last_SQM_value*ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value* ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
-                    Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
-                }
-                else
-                {
+            //        Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
+            //    }
+            //    else
+            //    {
                     // Brightness = (0.3893 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.751 * (ObservingConditionsHardware.Last_SQM_value) + 180.45);
                   //  Brightness = -0.0534 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
-                    Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
-                }
+            //        Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
+            //    }
                     if (SensorLogEnable == "True")
                 {       // Write value to logfile-string
                     logfileString = logfileString + ";" + Brightness;
