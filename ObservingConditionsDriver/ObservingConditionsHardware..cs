@@ -739,6 +739,10 @@ namespace ASCOM.NANO.ObservingConditions
                 ReadSkyQuality = LocalServer.SharedResources.SendMessage("5GetSkyQuality#");
              //       Thread.Sleep(40000);  // Aprox. <40 seg con SQM 22
                 skyquality = ReadSkyQuality.Remove(ReadSkyQuality.Length - 1, 1);
+                    if( double.Parse(skyquality) > 22.40)
+                    {
+                        skyquality = "22.40";
+                    }
                 if (skyquality == "")
                     {
                         skyquality = "20.9";
@@ -788,6 +792,11 @@ namespace ASCOM.NANO.ObservingConditions
                         File.Copy(WorkDir + "\\" + NewFile, SaveDir + "\\" + SaveFile);
                         SaveFileIndexNumber++;
                     }
+                }
+                else
+                {
+                    logfileString = logfileString + ";" + "na.";    // No valid response obtained
+                    return -1.0;
                 }
 
                 System.Diagnostics.Process p = new System.Diagnostics.Process();

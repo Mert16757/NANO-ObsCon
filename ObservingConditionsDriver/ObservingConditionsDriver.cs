@@ -553,11 +553,9 @@ namespace ASCOM.NANO.ObservingConditions
             {
                 try
                 {
-                    int timerValue = Convert.ToInt16(ObservingConditionsHardware.UpdateSampleTimeDefault) * 1000;
                     CheckConnected("CloudCover");
                     double cloudCover = ObservingConditionsHardware.CloudCover;
                     LogMessage("CloudCover", cloudCover.ToString());
-                    Thread.Sleep(timerValue);    //Wait for xx seconds before cycling further
                     return cloudCover;
                 }
                 catch (Exception ex)
@@ -581,16 +579,8 @@ namespace ASCOM.NANO.ObservingConditions
                     CheckConnected("DewPoint");
                     double dewPoint = ObservingConditionsHardware.DewPoint;
                     LogMessage("DewPoint", dewPoint.ToString());
- //                   if (ObservingConditionsHardware.FirstTimeConnect == 1)
- //                   {
- //                       ObservingConditionsHardware.FirstTimeConnect = 0;
-                        return dewPoint;
- //                   }
- //                   else
- //                   {
- //                       Thread.Sleep(timerValue);    //Wait for xx seconds before cycling further
- //                       return dewPoint;
- //                   }
+                    Thread.Sleep(timerValue);    //Wait for xx seconds before cycling further
+                    return dewPoint;
                 }
                 catch (Exception ex)
                 {
@@ -632,10 +622,12 @@ namespace ASCOM.NANO.ObservingConditions
             {
                 try
                 {
-                 //   Thread.Sleep(500);
+                    //   Thread.Sleep(500);
+                    int timerValue = Convert.ToInt16(ObservingConditionsHardware.UpdateSampleTimeDefault) * 1000;
                     CheckConnected("Pressure");
                     double period = ObservingConditionsHardware.Pressure;
                     LogMessage("Pressure", period.ToString());
+                    Thread.Sleep(timerValue/10);    //Wait for xx seconds before cycling further
                     return period;
                 }
                 catch (Exception ex)
@@ -741,8 +733,12 @@ namespace ASCOM.NANO.ObservingConditions
             {
                 try
                 {
-                    CheckConnected("SkyQuality");    // Return SQM value
+                    CheckConnected("SkyQuality");
                     double skyQuality = ObservingConditionsHardware.SkyQuality;
+                //    Thread.Sleep(5000);   // SQM takes some 2 - 3 seconds to measure
+                //    int timerValue = Convert.ToInt16(ObservingConditionsHardware.UpdateSampleTimeDefault) * 1000;
+                //    Thread.Sleep(timerValue);    //Wait for xx seconds before cycling further
+
                     LogMessage("SkyQuality", skyQuality.ToString());
                     return skyQuality;
                 }
