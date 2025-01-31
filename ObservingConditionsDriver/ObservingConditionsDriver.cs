@@ -702,6 +702,31 @@ namespace ASCOM.NANO.ObservingConditions
             }
         }
 
+
+
+        /// <summary>
+        /// Sky quality at the observatory, in magnitudes per square arc-second
+        /// </summary>
+        public double SkyQuality
+        {
+            get
+            {
+                try
+                {
+                    CheckConnected("SkyQuality");
+                    double skyQuality = ObservingConditionsHardware.SkyQuality;
+                    LogMessage("SkyQuality", skyQuality.ToString());
+                //    Thread.Sleep(3);
+                    return skyQuality;
+                }
+                catch (Exception ex)
+                {
+                    LogMessage("SkyQuality", $"Threw an exception: \r\n{ex}");
+                    throw;
+                }
+            }
+        }
+
         /// <summary>
         /// Sky brightness at the observatory, in Lux (lumens per square meter)
         /// </summary>
@@ -719,32 +744,6 @@ namespace ASCOM.NANO.ObservingConditions
                 catch (Exception ex)
                 {
                     LogMessage("SkyBrightness", $"Threw an exception: \r\n{ex}");
-                    throw;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Sky quality at the observatory, in magnitudes per square arc-second
-        /// </summary>
-        public double SkyQuality
-        {
-            get
-            {
-                try
-                {
-                    CheckConnected("SkyQuality");
-                    double skyQuality = ObservingConditionsHardware.SkyQuality;
-                //    Thread.Sleep(5000);   // SQM takes some 2 - 3 seconds to measure
-                //    int timerValue = Convert.ToInt16(ObservingConditionsHardware.UpdateSampleTimeDefault) * 1000;
-                //    Thread.Sleep(timerValue);    //Wait for xx seconds before cycling further
-
-                    LogMessage("SkyQuality", skyQuality.ToString());
-                    return skyQuality;
-                }
-                catch (Exception ex)
-                {
-                    LogMessage("SkyQuality", $"Threw an exception: \r\n{ex}");
                     throw;
                 }
             }

@@ -515,7 +515,6 @@ namespace ASCOM.NANO.ObservingConditions
             {               
                 if (!Connected)
                     {
-                //        Thread.Sleep(500); 
                      string ReadHumidity, humidity = string.Empty;
                      LocalServer.SharedResources.Connected = true;
                      ReadHumidity = LocalServer.SharedResources.SendMessage("7HtuHum#");
@@ -549,7 +548,6 @@ namespace ASCOM.NANO.ObservingConditions
                 //  throw new PropertyNotImplementedException("Pressure", false);
                 if (!Connected)
                 {
-                //   Thread.Sleep(500);
                     string ReadPressure, pressure = string.Empty;
                     LocalServer.SharedResources.Connected = true;
                     ReadPressure = LocalServer.SharedResources.SendMessage("2GetPressure#");
@@ -685,73 +683,35 @@ namespace ASCOM.NANO.ObservingConditions
             }
         }
 
-        /// <summary>
-        /// Sky brightness at the observatory
-        /// </summary>
-        internal static double SkyBrightness
-        {
-            get
-            {
-                double Brightness;
-                double TempBrightness3, TempBrightness2, TempBrightness;
-                //   LogMessage("SkyBrightness", "get - not implemented");
-                //   throw new PropertyNotImplementedException("SkyBrightness", false);
-                // V1 SkyBrightness=0.3899*last_SQM_value^2-16.792*last_SQM_value+181.04
-                // V2 SkyBrightness=0.3893*last_SQM_value^2 - 16.751*last_SQM_value + 180.45
-                // V3 SkyBrightness = -0.0534*last_SQM_value^3 + 3.6476*last_SQM_value^2 - 82.95*last_SQM_value + 628.14
-                TempBrightness3 = Math.Pow (ObservingConditionsHardware.Last_SQM_value, 3);
-                TempBrightness2 = Math.Pow(ObservingConditionsHardware.Last_SQM_value, 2);
-                TempBrightness = ObservingConditionsHardware.Last_SQM_value;
-                Brightness = Math.Exp((10046 - 500 * Last_SQM_value)/549);
-
-            //    if ( ObservingConditionsHardware.L0ast_SQM_value > 19)
-            //    {
-                 //   Brightness = -0.0534 * ( ObservingConditionsHardware.Last_SQM_value*ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value* ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
-            //        Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
-            //    }
-            //    else
-            //    {
-                    // Brightness = (0.3893 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 16.751 * (ObservingConditionsHardware.Last_SQM_value) + 180.45);
-                  //  Brightness = -0.0534 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) + 3.6476 * (ObservingConditionsHardware.Last_SQM_value * ObservingConditionsHardware.Last_SQM_value) - 82.95 * ObservingConditionsHardware.Last_SQM_value + 628.14;
-            //        Brightness = -0.0534 * TempBrightness3 + 3.6476 * TempBrightness2 - 82.95 * TempBrightness + 628.14;
-            //    }
-                    if (SensorLogEnable == "True")
-                {       // Write value to logfile-string
-                    logfileString = logfileString + ";" + Brightness;
-                }
-                return Brightness;
-            }
-         }
-
+    
         /// <summary>
         /// Sky quality at the observatory
         /// </summary>
-        internal static double SkyQuality
-    {
+    internal static double SkyQuality
+        {
         get
         {
             //    LogMessage("SkyQuality", "get - not implemented");
             //    throw new PropertyNotImplementedException("SkyQuality", false);
             if (!Connected)
-            {
+                {
                 string ReadSkyQuality, skyquality = string.Empty;
                 LocalServer.SharedResources.Connected = true;
                 ReadSkyQuality = LocalServer.SharedResources.SendMessage("5GetSkyQuality#");
-             //       Thread.Sleep(40000);  // Aprox. <40 seg con SQM 22
                 skyquality = ReadSkyQuality.Remove(ReadSkyQuality.Length - 1, 1);
-                    if( double.Parse(skyquality) > 22.40)
+                if( double.Parse(skyquality) > 22.50)
                     {
-                        skyquality = "22.40";
-                    }
+                        skyquality = "22.50";
+                }
                 if (skyquality == "")
                     {
                         skyquality = "20.9";
-                    }
+                }
                 if (SensorLogEnable == "True")
-                {       // Write value to logfile-string
+                   {       // Write value to logfile-string
                     logfileString = logfileString + ";" + skyquality;
                 }
-                Last_SQM_value = Double.Parse(skyquality);  
+                ObservingConditionsHardware.Last_SQM_value = Double.Parse(skyquality);  
                 return Double.Parse(skyquality);
             }
             else
@@ -761,6 +721,27 @@ namespace ASCOM.NANO.ObservingConditions
             }
         }
     }
+
+        /// <summary>  
+        /// Sky brightness at the observatory
+        /// </summary>
+    internal static double SkyBrightness
+    {
+        get
+           {
+            double Brightness;
+            Brightness = Math.Exp((10046 - 500 * ObservingConditionsHardware.SkyQuality) / 549);
+
+            if (SensorLogEnable == "True")
+                {       // Write value to logfile-string
+                    logfileString = logfileString + ";" + Brightness;
+            }
+            return Brightness;
+        }
+    }
+
+
+
         /// <summary>
         /// Seeing at the observatory
         /// </summary>
